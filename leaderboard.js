@@ -8,15 +8,23 @@ if(Meteor.isClient){
     },
     'otherHelperFunction': function(){
         return "Some other function"
-    }
+    },
+    'selectedClass': function(){
+    	var playerId = this._id;
+	    var selectedPlayer = Session.get('selectedPlayer');
+	    if(playerId == selectedPlayer){
+	        return "selected"
+	    }
+	} 
   });
 
   Template.leaderboard.events({
     // events go here
      'click .player': function(){
         // code goes here
-        console.log("You clicked player element");
-    }
+       	var playerId = this._id;
+    	Session.set('selectedPlayer', playerId);
+      }
   });
 
 }
