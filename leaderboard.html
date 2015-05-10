@@ -4,6 +4,9 @@
 <body>
     <h1>Leaderboard</h1>
 	{{>leaderboard}}
+
+	{{> addPlayerForm}}
+
 </body>
 
 
@@ -17,7 +20,16 @@
 	</ul>
 	<input type="button" class="increment" value="Give 5 Points">
 	<input type="button" class="decrement" value="Take 5 Points">
+	<input type="button" class="remove" value="Remove Player">
 <br />
 
 {{otherHelperFunction}}
+</template>
+
+
+<template name="addPlayerForm">
+    <form>
+        <input type="text" name="playerName">
+        <input type="submit" value="Add Player">
+    </form>
 </template>
