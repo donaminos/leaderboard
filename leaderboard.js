@@ -38,16 +38,18 @@ if(Meteor.isClient){
       'click .increment': function(){
         // code goes here
         var selectedPlayer = Session.get('selectedPlayer');
-       PlayersList.update(selectedPlayer, {$inc: {score: 5} });
+        //Meteor.call('increment', selectedPlayer);
+        Meteor.call('modifyPlayerScore', selectedPlayer, 5);
       },
       'click .decrement': function(){
         var selectedPlayer = Session.get('selectedPlayer');
-        PlayersList.update(selectedPlayer, {$inc: {score: -5} });
+       // Meteor.call('decrement', selectedPlayer);
+       Meteor.call('modifyPlayerScore', selectedPlayer, -5);
       },
       'click .remove': function(){
         // code goes here
         var selectedPlayer = Session.get('selectedPlayer');
-        PlayersList.remove(selectedPlayer);
+        Meteor.call('removePlayer', selectedPlayer);
       }
       
   });
@@ -58,13 +60,8 @@ if(Meteor.isClient){
         // code goes here
         event.preventDefault();
         var playerNameVar = event.target.playerName.value;
-        var currentUserId = Meteor.userId();
 
-        PlayersList.insert({
-            name: playerNameVar,
-            score: 0,
-            createdBy: currentUserId
-        });
+       Meteor.call('insertPlayerData', playerNameVar);
       }
       
   });
@@ -75,6 +72,32 @@ if(Meteor.isServer){
   Meteor.publish('thePlayers', function(){
      var currentUserId = this.userId;
     return PlayersList.find({createdBy: currentUserId});
+  });
+
+  Meteor.methods({
+    'insertPlayerData': function(playerNameVar){
+        var currentUserId = Meteor.userId();
+        PlayersList.insert({
+            name: playerNameVar,
+            score: 0,
+            createdBy: currentUserId
+        });
+    },
+    'removePlayer': function(selectedPlayer){
+       PlayersList.remove(selectedPlayer);
+    },
+    'modifyPlayerScore': function(selectedPlayer, scoreValue){
+      PlayersList.update(selectedPlayer,{$inc: {score: scoreValue}});
+    },
+    'decrement':function(selectedPlayer){
+      PlayersList.update(selectedPlayer, {$inc: {score: -5} });
+    },
+    'increment':function(selectedPlayer){
+      PlayersList.update(selectedPlayer, {$inc: {score: 5} });
+    },
+    'sendLogMessage': function(){
+        console.log("Hello world");
+    }
   });
 
 }
